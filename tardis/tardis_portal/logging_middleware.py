@@ -57,6 +57,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'module',
         },
+	'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'module', 
+        },
         'systemlog': {
             'level': settings.SYSTEM_LOG_LEVEL,
             'class': 'logging.handlers.RotatingFileHandler',
@@ -85,6 +90,12 @@ LOGGING = {
             'propagate': False,
             'level': settings.MODULE_LOG_LEVEL,
         },
+	'django.request': {
+            'handlers': ['mail_admins', 'systemlog'],
+	#    'handlers': ['systemlog'],
+            'level': 'ERROR',
+            'propagate': False,
+        },	
     }
 }
 
@@ -132,3 +143,4 @@ class LoggingMiddleware(object):
         extra = {'ip': ip, 'user': user, 'method': method, 'status': status}
         self.logger.error('%s %s' % (request.path, exception), extra=extra)
         return None
+
